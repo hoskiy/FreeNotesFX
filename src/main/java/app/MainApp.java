@@ -106,7 +106,7 @@ public class MainApp extends Application {
             lista.getItems().add(tarea);
         }
 
-        stage.setTitle("Gestor de Tareas");
+        stage.setTitle("FreeNotes");
 
         opciones.getChildren().addAll(añadir);
         root.getChildren().addAll(opciones, lista, estadisticas);
