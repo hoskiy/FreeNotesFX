@@ -1,0 +1,58 @@
+.ventana {
+    -fx-background-color: black;
+}
+
+.boton {
+    -fx-background-radius: 10;
+    -fx-background-color: green;
+    -fx-text-fill: white;
+}
+
+#listaTareas {
+    -fx-background-color: black;
+    -fx-control-inner-background: black;
+}
+
+#listaTareas .list-cell:empty {
+    -fx-background-color: black;
+}
+
+.contenedor-tarea {
+    -fx-padding: 10;
+    -fx-background-color: lightgray;
+    -fx-border-color: black;
+    -fx-background-radius: 10;
+    -fx-selection-bar: white;
+}
+.estado {
+    -fx-text-fill: black;
+}
+.descripcion {
+    -fx-text-fill: black;
+}
+.prioridad {
+    -fx-text-fill: black;
+}
+.fechaLimite {
+    -fx-text-fill: black;
+}
+
+.menu-desplegable {
+    -fx-border-color: black;
+    -fx-background-color: lightgray;
+}
+
+.context-menu {
+    -fx-border-color: black;
+    -fx-background-color: lightgray;
+}
+
+#panelEstadisticas {
+    -fx-background-color: purple;
+    -fx-padding: 10;
+}
+
+.estadisticas {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
