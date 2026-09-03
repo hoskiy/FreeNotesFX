@@ -1,5 +1,5 @@
-# FreeNotes
-FreeNotes is a free and open-source note-taking app built with JavaFX
+# FreeNotesFX
+FreeNotesFX is a free and open-source note-taking app built with JavaFX
 
 ## Features
 - Add notes
@@ -7,10 +7,12 @@ FreeNotes is a free and open-source note-taking app built with JavaFX
 - Delete notes
 - Local file persistence
 - Set priority on your notes
+- Set deadline to your notes
 
 ## Technologies
 - Java
 - JavaFX
+- CSS
 
 ## Installation
 1. Clone the repository:
