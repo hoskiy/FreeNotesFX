@@ -6,6 +6,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
@@ -28,12 +29,14 @@ public class Controlador {
 
     public void configurarEventos() {
         configurarAñadir();
+        configurarFiltros();
         configurarLista();
         configurarCompletar();
         configurarEditar();
         configurarPrioridad();
         configurarEliminar();
         configurarFecha();
+        actualizarEstadisticas();
     }
 
     private void configurarAñadir() {
@@ -61,6 +64,28 @@ public class Controlador {
             }
             actualizarEstadisticas();
             
+        });
+    }
+
+    private void configurarFiltros() {
+        vista.filtros.setOnAction(event -> {
+            String filtro = vista.filtros.getValue();
+            vista.lista.getItems().clear();
+
+            switch (filtro) {
+                case "Todas":
+                    mostrarTodas();
+                    break;
+                case "Pendientes":
+                    mostrarPendientes();
+                    break;
+                case "Completadas":
+                    mostrarCompletadas();
+                    break;
+                default:
+                    break;
+            }
+            vista.lista.refresh();
         });
     }
 
@@ -164,13 +189,28 @@ public class Controlador {
                     setText(null);
                     setGraphic(null);
                 } else {
+                    HBox tarjetaTarea = new HBox();
+                    Region barraColor = new Region();
+                    barraColor.setPrefWidth(6);
                     VBox contenedorTarea = new VBox();
                     HBox contenedor1 = new HBox();
                     HBox contenedor2 = new HBox();
                     Label descripcion = new Label(tarea.getDescripcion());
                     descripcion.getStyleClass().add("descripcion");
                     Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
-                    prioridad.getStyleClass().add("prioridad");
+                    prioridad.getStyleClass().add("secundario");
+
+                    switch(tarea.getPrioridad()) {
+                        case ALTA:
+                            barraColor.getStyleClass().add("prioridad-alta");
+                            break;
+                        case NORMAL:
+                            barraColor.getStyleClass().add("prioridad-normal");
+                            break;
+                        case BAJA:
+                            barraColor.getStyleClass().add("prioridad-baja");
+                            break;
+                    }
                     
                     Label estado;
                     if(tarea.isCompletada()) {
@@ -179,20 +219,22 @@ public class Controlador {
                         estado = new Label("❌");
                     }
                     estado.getStyleClass().add("estado");
-                    
+
                     contenedor1.getChildren().addAll(estado, descripcion);
                     contenedor1.setSpacing(8);
                     contenedor2.getChildren().add(prioridad);
                     if (tarea.getFechaLimite() != null) {
                         Label fechaLimite = new Label("Fecha limite: " + tarea.getFechaLimite());
-                        fechaLimite.getStyleClass().add("fechaLimite");
+                        fechaLimite.getStyleClass().add("secundario");
                         contenedor2.getChildren().add(fechaLimite);
                     }
                     contenedor2.setSpacing(12);
                     contenedorTarea.getChildren().addAll(contenedor1, contenedor2);
                     contenedorTarea.getStyleClass().add("contenedor-tarea");
+
+                    tarjetaTarea.getChildren().addAll(barraColor, contenedorTarea);
     
-                    setGraphic(contenedorTarea);
+                    setGraphic(tarjetaTarea);
                 }
             }
         });
@@ -208,7 +250,27 @@ public class Controlador {
         pendientes.getStyleClass().add("estadisticas");
 
         vista.estadisticas.getChildren().addAll(total, completadas, pendientes);
-        vista.estadisticas.setSpacing(10);
         vista.estadisticas.setId("panelEstadisticas");
+    }
+
+    // Metodos para los filtros
+    private void mostrarTodas() {
+        for (Tarea tarea : gestor.getTareas()) {
+            vista.lista.getItems().add(tarea);
+        }
+    }
+    private void mostrarPendientes() {
+        for (Tarea tarea : gestor.getTareas()) {
+            if (!tarea.isCompletada()) {
+                vista.lista.getItems().add(tarea);
+            }
+        }
+    }
+    private void mostrarCompletadas() {
+        for (Tarea tarea : gestor.getTareas()) {
+            if (tarea.isCompletada()) {
+                vista.lista.getItems().add(tarea);
+            }
+        }
     }
 }

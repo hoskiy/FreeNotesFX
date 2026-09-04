@@ -21,12 +21,12 @@ public class MainApp extends Application {
         gestor = new GestorTareas();
         controlador = new Controlador(vista, gestor);
         
-        controlador.configurarEventos();
-        
         vista.añadir.getStyleClass().add("boton");
+        vista.filtros.setId("filtros");
         vista.menuTarea.getStyleClass().add("menu-desplegable");
+        
         gestor.recuperarTareas();
-
+        controlador.configurarEventos();
 
         for (Tarea tarea : gestor.getTareas()) {
             vista.lista.getItems().add(tarea);
@@ -38,7 +38,7 @@ public class MainApp extends Application {
         stage.getIcons().add(icono);
         
         vista.root.getStyleClass().add("ventana");
-        
+        vista.opciones.getStyleClass().add("contenedor-horizontal");
         
         scene = new Scene(vista.root, 500, 400);
         scene.getStylesheets().add(getClass().getResource("/estilo.css").toExternalForm());

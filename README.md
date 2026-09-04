@@ -1,13 +1,15 @@
 # FreeNotesFX
 FreeNotesFX is a free and open-source note-taking app built with JavaFX
+Currently only in Spanish
 
 ## Features
 - Add notes
 - Edit notes
 - Delete notes
 - Local file persistence
-- Set priority on your notes
-- Set deadline to your notes
+- Set priorities
+- Set deadlines for your notes
+- Set filters
 
 ## Technologies
 - Java
