@@ -15,45 +15,48 @@ public class Vista {
 
     ListView<Tarea> lista; 
     Button añadir;
-    ComboBox<String> filtros;
+    ComboBox<Filtros> filtros;
+    ComboBox<String> idiomas;
     ContextMenu menuTarea;
     Menu cambiarPrioridad;
     MenuItem cambiarAlta, cambiarNormal, cambiarBaja;
     MenuItem editar, eliminar, completarTarea, cambiarFecha;
     BorderPane root;
     HBox opciones, estadisticas;
-    GestorTareas gestor;
+    
     
 
     public Vista() {
         opciones = new HBox();
         root = new BorderPane();
-        añadir = new Button("Añadir tarea");
+        añadir = new Button();
         filtros = new ComboBox<>();
+        idiomas = new ComboBox<>();
+
         lista = new ListView<>();
         
         menuTarea = new ContextMenu();
         
-        cambiarPrioridad = new Menu("Cambiar prioridad");
-        cambiarAlta = new MenuItem("Alta");
-        cambiarNormal = new MenuItem("Normal");
-        cambiarBaja = new MenuItem("Baja");
+        cambiarPrioridad = new Menu();
+        cambiarAlta = new MenuItem();
+        cambiarNormal = new MenuItem();
+        cambiarBaja = new MenuItem();
 
-        completarTarea = new MenuItem("Completar");
-        editar = new MenuItem("Editar");
-        cambiarFecha = new MenuItem("Cambiar fecha limite");
-        eliminar = new MenuItem("Eliminar");
+        completarTarea = new MenuItem();
+        editar = new MenuItem();
+        cambiarFecha = new MenuItem();
+        eliminar = new MenuItem();
         
         estadisticas = new HBox();
         
-        filtros.setPromptText("🔍 Filtros");
-        filtros.getItems().addAll("Todas", "Pendientes", "Completadas");
+        filtros.getItems().addAll(Filtros.values());
+        idiomas.getItems().addAll("Español", "English");
         cambiarPrioridad.getItems().addAll(cambiarAlta, cambiarNormal, cambiarBaja);
         menuTarea.getItems().addAll(cambiarPrioridad, completarTarea, editar, cambiarFecha, eliminar);
         
         lista.setContextMenu(menuTarea);
 
-        opciones.getChildren().addAll(añadir, filtros);
+        opciones.getChildren().addAll(añadir, filtros, idiomas);
         root.setTop(opciones);
         root.setCenter(lista);
         root.setBottom(estadisticas);

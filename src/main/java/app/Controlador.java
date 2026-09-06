@@ -13,23 +13,29 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 
+import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import gestor.*;
 
 public class Controlador {
     private final GestorTareas gestor;
     private final Vista vista;
+    private ResourceBundle idioma;
 
-    public Controlador(Vista vista, GestorTareas gestor) {
+    public Controlador(Vista vista, GestorTareas gestor, ResourceBundle idioma) {
         this.gestor = gestor;
         this.vista = vista;
+        this.idioma = idioma;
         actualizarEstadisticas();
+        cambiarIdioma("es");
     }
 
     public void configurarEventos() {
         configurarAñadir();
         configurarFiltros();
+        configurarIdiomas();
         configurarLista();
         configurarCompletar();
         configurarEditar();
@@ -48,7 +54,7 @@ public class Controlador {
             dialog.setContentText("Descripción:");
 
             Optional<String> resultado = dialog.showAndWait();
-            if(resultado.isPresent()) {
+            if (resultado.isPresent()) {
                 String descripcion = resultado.get();
                 if (descripcion.isEmpty() || descripcion.isBlank()) {
                     Alert aviso = new Alert(AlertType.ERROR);
@@ -63,29 +69,46 @@ public class Controlador {
                 }
             }
             actualizarEstadisticas();
-            
+
         });
     }
 
     private void configurarFiltros() {
         vista.filtros.setOnAction(event -> {
-            String filtro = vista.filtros.getValue();
+            Filtros filtro = vista.filtros.getValue();
             vista.lista.getItems().clear();
 
             switch (filtro) {
-                case "Todas":
+                case TODAS:
                     mostrarTodas();
                     break;
-                case "Pendientes":
+                case PENDIENTES:
                     mostrarPendientes();
                     break;
-                case "Completadas":
+                case COMPLETADAS:
                     mostrarCompletadas();
                     break;
                 default:
                     break;
             }
             vista.lista.refresh();
+        });
+    }
+
+    private void configurarIdiomas() {
+        vista.idiomas.setOnAction(event -> {
+            String idioma = vista.idiomas.getValue();
+
+            switch (idioma) {
+                case "Español":
+                    cambiarIdioma("es");
+                    break;
+                case "English":
+                    cambiarIdioma("en");
+                    break;
+                default:
+                    break;
+            }
         });
     }
 
@@ -100,7 +123,7 @@ public class Controlador {
             dialog.setContentText(preDescripcion);
 
             Optional<String> resultado = dialog.showAndWait();
-            if(resultado.isPresent()) {
+            if (resultado.isPresent()) {
                 String newDescripcion = resultado.get();
                 if (newDescripcion.isEmpty() || newDescripcion.isBlank()) {
                     Alert aviso = new Alert(AlertType.ERROR);
@@ -132,7 +155,7 @@ public class Controlador {
                 aviso.setTitle("Confirmacion");
                 aviso.setHeaderText("¿Deseas eliminar esta tarea?");
                 aviso.setContentText("Esta acción no se puede revertir");
-    
+
                 Optional<ButtonType> resultado = aviso.showAndWait();
                 if (resultado.get().equals(ButtonType.OK)) {
                     vista.lista.getItems().remove(tareaSeleccionada);
@@ -149,7 +172,8 @@ public class Controlador {
             vista.lista.refresh();
         });
         vista.cambiarNormal.setOnAction(event -> {
-            vista.lista.getItems().get(vista.lista.getSelectionModel().getSelectedIndex()).setPrioridad(Prioridad.NORMAL);
+            vista.lista.getItems().get(vista.lista.getSelectionModel().getSelectedIndex())
+                    .setPrioridad(Prioridad.NORMAL);
             vista.lista.refresh();
         });
         vista.cambiarBaja.setOnAction(event -> {
@@ -163,10 +187,10 @@ public class Controlador {
             DatePicker selectorFecha = new DatePicker();
             Stage stageFecha = new Stage();
             Scene sceneFecha = new Scene(selectorFecha, 200, 100);
-            
+
             stageFecha.setScene(sceneFecha);
             stageFecha.show();
-    
+
             selectorFecha.setOnAction(eventSelector -> {
                 Tarea tarea = vista.lista.getSelectionModel().getSelectedItem();
                 tarea.setFechaLimite(selectorFecha.getValue());
@@ -179,12 +203,12 @@ public class Controlador {
     private void configurarLista() {
         vista.lista.setId("listaTareas");
         vista.lista.setCellFactory(param -> new ListCell<Tarea>() {
-    
+
             @Override
             protected void updateItem(Tarea tarea, boolean empty) {
-    
+
                 super.updateItem(tarea, empty);
-    
+
                 if (empty || tarea == null) {
                     setText(null);
                     setGraphic(null);
@@ -197,23 +221,26 @@ public class Controlador {
                     HBox contenedor2 = new HBox();
                     Label descripcion = new Label(tarea.getDescripcion());
                     descripcion.getStyleClass().add("descripcion");
-                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
+                    Label prioridad = new Label();
                     prioridad.getStyleClass().add("secundario");
 
-                    switch(tarea.getPrioridad()) {
+                    switch (tarea.getPrioridad()) {
                         case ALTA:
+                            prioridad.setText(idioma.getString("tarea.prioridad") + idioma.getString("tarea.prioridad.alta"));
                             barraColor.getStyleClass().add("prioridad-alta");
                             break;
                         case NORMAL:
+                            prioridad.setText(idioma.getString("tarea.prioridad") + idioma.getString("tarea.prioridad.normal"));
                             barraColor.getStyleClass().add("prioridad-normal");
                             break;
                         case BAJA:
+                            prioridad.setText(idioma.getString("tarea.prioridad") + idioma.getString("tarea.prioridad.baja"));
                             barraColor.getStyleClass().add("prioridad-baja");
                             break;
                     }
-                    
+
                     Label estado;
-                    if(tarea.isCompletada()) {
+                    if (tarea.isCompletada()) {
                         estado = new Label("✅");
                     } else {
                         estado = new Label("❌");
@@ -224,7 +251,7 @@ public class Controlador {
                     contenedor1.setSpacing(8);
                     contenedor2.getChildren().add(prioridad);
                     if (tarea.getFechaLimite() != null) {
-                        Label fechaLimite = new Label("Fecha limite: " + tarea.getFechaLimite());
+                        Label fechaLimite = new Label(idioma.getString("tarea.fechaLimite") + tarea.getFechaLimite());
                         fechaLimite.getStyleClass().add("secundario");
                         contenedor2.getChildren().add(fechaLimite);
                     }
@@ -233,7 +260,7 @@ public class Controlador {
                     contenedorTarea.getStyleClass().add("contenedor-tarea");
 
                     tarjetaTarea.getChildren().addAll(barraColor, contenedorTarea);
-    
+
                     setGraphic(tarjetaTarea);
                 }
             }
@@ -242,11 +269,11 @@ public class Controlador {
 
     private void actualizarEstadisticas() {
         vista.estadisticas.getChildren().clear();
-        Label total = new Label("Total: " + gestor.getNumTareas());
+        Label total = new Label(idioma.getString("estadisticas.total") + gestor.getNumTareas());
         total.getStyleClass().add("estadisticas");
-        Label completadas = new Label("Completadas: " + gestor.howManyCompletada());
+        Label completadas = new Label(idioma.getString("estadisticas.completadas") + gestor.howManyCompletada());
         completadas.getStyleClass().add("estadisticas");
-        Label pendientes = new Label("Pendientes: " + gestor.howManyPendiente());
+        Label pendientes = new Label(idioma.getString("estadisticas.pendientes") + gestor.howManyPendiente());
         pendientes.getStyleClass().add("estadisticas");
 
         vista.estadisticas.getChildren().addAll(total, completadas, pendientes);
@@ -259,6 +286,7 @@ public class Controlador {
             vista.lista.getItems().add(tarea);
         }
     }
+
     private void mostrarPendientes() {
         for (Tarea tarea : gestor.getTareas()) {
             if (!tarea.isCompletada()) {
@@ -266,11 +294,71 @@ public class Controlador {
             }
         }
     }
+
     private void mostrarCompletadas() {
         for (Tarea tarea : gestor.getTareas()) {
             if (tarea.isCompletada()) {
                 vista.lista.getItems().add(tarea);
             }
         }
+    }
+
+    private void cambiarIdioma(String codigoIdioma) {
+        idioma = ResourceBundle.getBundle("idiomas.mensajes", Locale.forLanguageTag(codigoIdioma));
+        actualizarTextos();
+    }
+
+    private void actualizarTextos() {
+        vista.idiomas.setPromptText(idioma.getString("idiomas.menu"));
+
+        vista.añadir.setText(idioma.getString("boton.añadir"));
+        vista.editar.setText(idioma.getString("boton.editar"));
+        vista.eliminar.setText(idioma.getString("boton.eliminar"));
+        vista.completarTarea.setText(idioma.getString("boton.completar"));
+        vista.cambiarFecha.setText(idioma.getString("boton.fecha"));
+
+        vista.filtros.setPromptText(idioma.getString("filtros.menu"));
+        actualizarFiltros();
+
+        vista.cambiarPrioridad.setText(idioma.getString("prioridad.menu"));
+        vista.cambiarAlta.setText(idioma.getString("prioridad.alta"));
+        vista.cambiarNormal.setText(idioma.getString("prioridad.normal"));
+        vista.cambiarBaja.setText(idioma.getString("prioridad.baja"));
+
+        vista.lista.refresh();
+        actualizarEstadisticas();
+
+    }
+
+    private void actualizarFiltros() {
+
+        vista.filtros.setConverter(
+                new javafx.util.StringConverter<Filtros>() {
+
+                    @Override
+                    public String toString(Filtros filtro) {
+
+                        if (filtro == null) {
+                            return "";
+                        }
+
+                        return switch (filtro) {
+
+                            case TODAS ->
+                                idioma.getString("filtro.todas");
+
+                            case PENDIENTES ->
+                                idioma.getString("filtro.pendientes");
+
+                            case COMPLETADAS ->
+                                idioma.getString("filtro.completadas");
+                        };
+                    }
+
+                    @Override
+                    public Filtros fromString(String string) {
+                        return null;
+                    }
+                });
     }
 }

@@ -5,6 +5,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import gestor.*;
 
 public class MainApp extends Application {
@@ -14,15 +17,18 @@ public class MainApp extends Application {
 
     Controlador controlador;
     GestorTareas gestor;
+    ResourceBundle idioma;
 
     @Override
     public void start(Stage stage) {
         vista = new Vista();
         gestor = new GestorTareas();
-        controlador = new Controlador(vista, gestor);
+        idioma = ResourceBundle.getBundle("idiomas.mensajes", Locale.forLanguageTag("es"));
+        controlador = new Controlador(vista, gestor, idioma);
         
         vista.añadir.getStyleClass().add("boton");
         vista.filtros.setId("filtros");
+        vista.idiomas.setId("idiomas");
         vista.menuTarea.getStyleClass().add("menu-desplegable");
         
         gestor.recuperarTareas();
@@ -53,6 +59,4 @@ public class MainApp extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
-    
 }

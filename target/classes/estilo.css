@@ -14,6 +14,11 @@
     -fx-prompt-text-fill: black;
 }
 
+#idiomas {
+    -fx-background-color: lightgrey;
+    -fx-prompt-text-fill: black;
+}
+
 .contenedor-horizontal {
     -fx-padding: 2;
     -fx-spacing: 2;
