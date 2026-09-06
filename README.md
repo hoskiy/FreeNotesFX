@@ -24,7 +24,7 @@ FreeNotesFX is a free and open-source note-taking app built with JavaFX
 ## Installation
 1. Clone the repository:
 ```bash
-git clone https://github.com/hoskiy/FreeNotes.git
+git clone https://github.com/hoskiy/FreeNotesFX.git
 ```
 2. Open the project in VSCode
 3. Run the app
