@@ -226,15 +226,18 @@ public class Controlador {
 
                     switch (tarea.getPrioridad()) {
                         case ALTA:
-                            prioridad.setText(idioma.getString("tarea.prioridad") + idioma.getString("tarea.prioridad.alta"));
+                            prioridad.setText(
+                                    idioma.getString("tarea.prioridad") + idioma.getString("tarea.prioridad.alta"));
                             barraColor.getStyleClass().add("prioridad-alta");
                             break;
                         case NORMAL:
-                            prioridad.setText(idioma.getString("tarea.prioridad") + idioma.getString("tarea.prioridad.normal"));
+                            prioridad.setText(
+                                    idioma.getString("tarea.prioridad") + idioma.getString("tarea.prioridad.normal"));
                             barraColor.getStyleClass().add("prioridad-normal");
                             break;
                         case BAJA:
-                            prioridad.setText(idioma.getString("tarea.prioridad") + idioma.getString("tarea.prioridad.baja"));
+                            prioridad.setText(
+                                    idioma.getString("tarea.prioridad") + idioma.getString("tarea.prioridad.baja"));
                             barraColor.getStyleClass().add("prioridad-baja");
                             break;
                     }
@@ -318,7 +321,11 @@ public class Controlador {
         vista.cambiarFecha.setText(idioma.getString("boton.fecha"));
 
         vista.filtros.setPromptText(idioma.getString("filtros.menu"));
+        
+        Filtros seleccionado = vista.filtros.getValue();
         actualizarFiltros();
+        vista.filtros.getItems().setAll(Filtros.values());
+        vista.filtros.setValue(seleccionado);
 
         vista.cambiarPrioridad.setText(idioma.getString("prioridad.menu"));
         vista.cambiarAlta.setText(idioma.getString("prioridad.alta"));
