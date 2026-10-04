@@ -1,33 +1,21 @@
 # FreeNotesFX
-FreeNotesFX is a free and open-source note-taking app built with JavaFX
+FreeNotesFX es un gestor de notas/tareas de codigo abierto construida con JavaFX
 
-### Languages
-- Spanish
-- English
-
----
-## Features
-- Add notes
-- Edit notes
-- Delete notes
-- Local file persistence
-- Set priorities
-- Set due dates for your notes
-- Set filters
-
-### Technologies
-- Java
-- JavaFX
-- CSS
+### Idiomas
+- Español (ES)
+- Inglés (EN)
 
 ---
-## Installation
-1. Clone the repository:
-```bash
-git clone https://github.com/hoskiy/FreeNotesFX.git
-```
-2. Open the project in VSCode
-3. Run the app
+## Funcionalidades
+- Añadir notas
+- Editar notas
+- Eliminar notas
+- Guardado local
+- Poner prioridades
+- Poner fecha limite
+- Seleccionar filtros de vista
+- Cambiar de idioma
 
-### License
-This project is open source
+---
+## Estado actual
+A día de hoy se encuentra en una version temprana donde faltan por pulir varios aspectos
